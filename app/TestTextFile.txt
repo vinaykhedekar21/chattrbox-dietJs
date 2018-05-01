@@ -1,0 +1,3 @@
+Hello vinay..!!!
+
+We are testing for Mime txt file.
