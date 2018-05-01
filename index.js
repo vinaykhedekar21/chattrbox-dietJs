@@ -6,6 +6,7 @@
 var server = require('diet')
 var wss = require("./websockets-server");
 var app = server()
+var fs = require('fs')
 app.listen('http://localhost:8000')
 
 // Require the diet-static module and configure it
@@ -23,10 +24,15 @@ app.get('/', function($) {
 
 // When invalid path entered show error page 404 not found
 app.missing(function($) {
-  $.redirect('/error.html')
-  //$.status('404', 'File not found')
-  //$.end($.statusCode + ' ' + $.statusMessage) // 404 Page Not Found
-
+  // set "Content-Type" header to "text/html"
+  	$.header('Content-Type', 'text/html')
+    $.status('404', 'File not found')
+    fs.readFile(__dirname+'/app/error.html',function(error, content){
+    	// handle error
+    	if(error) throw error;
+    	// Serve the file to the client
+        $.end(content.toString())
+    })
 })
 // Subscribe to all error events
 app.error(function($, middleware) {
